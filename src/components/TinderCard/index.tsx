@@ -2,23 +2,27 @@ import React from 'react';
 import {View, Text, ImageBackground} from 'react-native';
 import {styles} from './styles';
 
-type TinderCardProps = {
+/*
+export type TinderCardProps = {
   name: string;
   bio: string;
   image: string;
 };
+*/
 
-const TinderCard = ({name, bio, image}: TinderCardProps) => {
+const TinderCard = ({cat}:any ) => {
+  const {id, url} =cat
+  
   return (
     <View style={styles.catCard}>
       <ImageBackground
         source={{
-          uri: image,
+          uri: url,
         }}
         style={styles.catImage}>
         <View style={styles.cardInner}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.bio}>{bio}</Text>
+          <Text style={styles.name}>{id}</Text>
+          <Text style={styles.bio}>{id}</Text>
         </View>
       </ImageBackground>
     </View>

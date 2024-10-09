@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useState} from 'react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import TinderCard from './src/components/TinderCard';
 import {View, StyleSheet, Text, useWindowDimensions} from 'react-native';
@@ -9,28 +9,37 @@ import Animated, {
   useSharedValue,
   useAnimatedGestureHandler,
   useDerivedValue,
-  interpolate
+  interpolate,
 } from 'react-native-reanimated';
 import {PanGestureHandler} from 'react-native-gesture-handler';
+import {TinderCardProps} from './src/components/TinderCard';
 
 // Define the type for the context
 interface GestureContext {
   startX: number;
 }
 
-const ROTATION =60;
+const ROTATION = 60;
 
 function App(): React.JSX.Element {
-  const {width: screenWidth} = useWindowDimensions();
-
-  const hiddenTranslateX = 2 *screenWidth;
   const {data, loading} = useFetch();
-  const translateX = useSharedValue(0);
-  const rotate = useDerivedValue(()=>interpolate(translateX.value,
-    [0, hiddenTranslateX],
-    [0,ROTATION],
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState(currentIndex + 1);
+  const [currentProfile, setCurrentProfile] = useState<TinderCardProps | null>(
+    data ? data[currentIndex] : null,
+  );
+  const [nextProfile, setNextProfile] = useState<TinderCardProps | null>(
+    data ? data[nextIndex] : null,
+  );
 
-  )+'deg');
+  const {width: screenWidth} = useWindowDimensions();
+  const hiddenTranslateX = 2 * screenWidth;
+  const translateX = useSharedValue(0);
+  const rotate = useDerivedValue(
+    () =>
+      interpolate(translateX.value, [0, hiddenTranslateX], [0, ROTATION]) +
+      'deg',
+  );
 
   const cardStyle = useAnimatedStyle(() => ({
     transform: [
@@ -38,9 +47,29 @@ function App(): React.JSX.Element {
         translateX: translateX.value,
       },
       {
-        rotate: rotate.value
-      }
+        rotate: rotate.value,
+      },
     ],
+  }));
+
+  const nextCardStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: interpolate(
+          translateX.value,
+          [-hiddenTranslateX, 0, hiddenTranslateX],
+          [1, 0.8, 1],
+        ),
+      },
+      {
+        rotate: rotate.value,
+      },
+    ],
+    opacity: interpolate(
+      translateX.value,
+      [-hiddenTranslateX, 0, hiddenTranslateX],
+      [1, 0.6, 1],
+    ),
   }));
 
   const gestureHandler = useAnimatedGestureHandler<GestureContext>({
@@ -54,6 +83,12 @@ function App(): React.JSX.Element {
       console.warn('Touch ended');
     },
   });
+  // Update profiles when data is fetched or currentIndex changes
+  React.useEffect(() => {
+    if (data && data.length > 0) {
+      setCurrentProfile(data[currentIndex] || null);
+    }
+  }, [data, currentIndex]);
 
   if (loading) {
     return (
@@ -65,13 +100,15 @@ function App(): React.JSX.Element {
 
   return (
     <GestureHandlerRootView style={styles.container}>
+      <View style={styles.nextCardContainer}>
+        <Animated.View style={[styles.animatedCard, nextCardStyle]}>
+          <TinderCard cat={currentProfile} />
+        </Animated.View>
+      </View>
+
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <Animated.View style={[styles.animatedCard, cardStyle]}>
-          <TinderCard
-            name="Cute Cat"
-            bio="This is the cutest cat ever"
-            image="https://preview.redd.it/68ehyaze7to81.jpg?width=640&crop=smart&auto=webp&s=aa9105a6a9a61c3cb503df53f7b9c5a8f8ca276a"
-          />
+          <TinderCard cat={currentProfile} />
         </Animated.View>
       </PanGestureHandler>
     </GestureHandlerRootView>
@@ -87,8 +124,14 @@ const styles = StyleSheet.create({
   },
   animatedCard: {
     width: '100%',
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  nextCardContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
