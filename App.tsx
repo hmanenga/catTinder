@@ -2,32 +2,52 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import TinderCard from './src/components/TinderCard';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, useWindowDimensions} from 'react-native';
 import useFetch from './src/hooks';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   useAnimatedGestureHandler,
+  useDerivedValue,
+  interpolate
 } from 'react-native-reanimated';
 import {PanGestureHandler} from 'react-native-gesture-handler';
 
+// Define the type for the context
+interface GestureContext {
+  startX: number;
+}
+
+const ROTATION =60;
+
 function App(): React.JSX.Element {
+  const {width: screenWidth} = useWindowDimensions();
+
+  const hiddenTranslateX = 2 *screenWidth;
   const {data, loading} = useFetch();
   const translateX = useSharedValue(0);
+  const rotate = useDerivedValue(()=>interpolate(translateX.value,
+    [0, hiddenTranslateX],
+    [0,ROTATION],
+
+  )+'deg');
 
   const cardStyle = useAnimatedStyle(() => ({
     transform: [
       {
         translateX: translateX.value,
       },
+      {
+        rotate: rotate.value
+      }
     ],
   }));
-  
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_,context) => {
-      context.startX= translateX.value;
+
+  const gestureHandler = useAnimatedGestureHandler<GestureContext>({
+    onStart: (_, context) => {
+      context.startX = translateX.value;
     },
-    onActive: (event,context) => {
+    onActive: (event, context) => {
       translateX.value = context.startX + event.translationX;
     },
     onEnd: () => {
