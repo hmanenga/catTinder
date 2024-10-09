@@ -1,15 +1,9 @@
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   catCard: {
-    width: '95%',
-    height: '70%',
+    width: 343,
+    height: 446,
   },
   catImage: {
     width: '100%',
