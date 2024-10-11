@@ -11,7 +11,7 @@ export type TinderCardProps = {
 */
 
 const TinderCard = ({cat}:any ) => {
-  const {id, url} =cat
+  const {id, url,name} =cat
   
   return (
     <View style={styles.catCard}>
@@ -21,7 +21,7 @@ const TinderCard = ({cat}:any ) => {
         }}
         style={styles.catImage}>
         <View style={styles.cardInner}>
-          <Text style={styles.name}>{id}</Text>
+          <Text style={styles.name}>{name}</Text>
           <Text style={styles.bio}>{id}</Text>
         </View>
       </ImageBackground>
