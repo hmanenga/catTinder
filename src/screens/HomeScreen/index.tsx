@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, SafeAreaView} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 import TinderCard from '../../components/TinderCard';
 import Navbar from '../../components/Navbar';
 

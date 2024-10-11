@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {useEffect, useState} from 'react';
-import {View, Text, useWindowDimensions} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 import useFetch from '../../hooks';
 import Animated, {
   useAnimatedStyle,
@@ -17,14 +17,13 @@ import {
 } from 'react-native-gesture-handler';
 import Like from '../../../assets/images/LIKE.png';
 import Nope from '../../../assets/images/nope.png';
-import { Heart } from 'lucide-react-native';
 import {styles} from './styles';
 
 const ROTATION = 60;
 const SWIPE_VELOCITY = 800;
 const AnimatedStack = (props: any) => {
   const {renderItem, onSwipeRight, onSwipeLeft} = props;
-  const {data, loading} = useFetch();
+  const {data} = useFetch();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(currentIndex + 1);

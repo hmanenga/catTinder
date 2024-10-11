@@ -1,5 +1,11 @@
 import {useState, useEffect} from 'react';
 
+export interface UseFetchResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
+
 const useFetch = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

@@ -34,13 +34,10 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     color: 'black',
     fontWeight: 'bold',
-    marginHorizontal: 10,
+    paddingHorizontal: 10,
   },
   origin: {
     fontSize: 10,
-    marginBottom: 10,
-    color: 'gray',
-    lineHeight: 25,
-    padding: 2,
+    paddingHorizontal: 10
   },
 });
