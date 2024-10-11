@@ -22,18 +22,25 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   cardInner: {
-    padding: 10,
+    width: 307,
+    height:48,
+    paddingVertical: 5,
+    marginHorizontal: 15,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    bottom: -10,
   },
   name: {
-    fontSize: 30,
-    color: '#fff',
+    fontSize: 12,
+    color: 'black',
     fontWeight: 'bold',
     marginHorizontal: 10,
   },
-  bio: {
-    fontSize: 18,
+  origin: {
+    fontSize: 10,
     marginBottom: 10,
-    color: '#fff',
+    color: 'gray',
     lineHeight: 25,
+    padding: 2,
   },
 });

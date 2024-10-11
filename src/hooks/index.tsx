@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 
 const useFetch = () => {
   const [data, setData] = useState(null);
@@ -11,7 +11,9 @@ const useFetch = () => {
       setError(null); // Reset error state
 
       try {
-        const response = await fetch(`${process.env.API_BASE_URL}api_key=${process.env.API_KEY}`);
+        const response = await fetch(
+          `${process.env.API_BASE_URL}api_key=${process.env.API_KEY}`,
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -27,7 +29,7 @@ const useFetch = () => {
     fetchData();
   }, []);
 
-  return { data, loading, error };
+  return {data, loading, error};
 };
 
 export default useFetch;
